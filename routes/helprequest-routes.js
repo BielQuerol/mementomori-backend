@@ -10,7 +10,7 @@ const {
 const HelpRequest = require("../models/helprequest");
 
 //POST route => to create a new helprequest
-//       /api/helprequest
+//   Se suma api a todas las rutas ya que en app.js se especifica app.use("/api") =  /api/helprequest
 router.post("/helprequest", isLoggedIn(), (req, res, next) => {
   HelpRequest.create({
     userId: req.session.currentUser._id,
@@ -26,10 +26,17 @@ router.post("/helprequest", isLoggedIn(), (req, res, next) => {
     });
 });
 
-//GET route => to get all the helprequests????FRONT-end?
+//GET route => to get all the helprequests
 router.get("/helprequest", isLoggedIn(), (req, res, next) => {
   HelpRequest.find()
-    .populate("userId", "sender")
+    .populate("userId")
+    .populate({
+      path: "helpMessages",
+      populate: {
+        path: "sender",
+        model: "User",
+      },
+    })
     .then((allTheHelpRequests) => {
       res.json(allTheHelpRequests);
     })
@@ -38,7 +45,7 @@ router.get("/helprequest", isLoggedIn(), (req, res, next) => {
     });
 });
 
-//GEt route => to get a specific helprequest
+//GET route => to get a specific helprequest
 router.get("/helprequest/:id", isLoggedIn(), (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({ message: "Specified id is not valid" });
@@ -46,7 +53,14 @@ router.get("/helprequest/:id", isLoggedIn(), (req, res, next) => {
   }
 
   HelpRequest.findById(req.params.id)
-    .populate("userId", "sender")
+    .populate("userId")
+    .populate({
+      path: "helpMessages",
+      populate: {
+        path: "sender",
+        model: "User",
+      },
+    })
     .then((response) => {
       res.status(200).json(response);
     })

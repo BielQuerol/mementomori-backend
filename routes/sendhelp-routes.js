@@ -13,6 +13,7 @@ const User = require("../models/user");
 //POST route => to send message to helprequesters
 router.post("/sendhelpform/:id", isLoggedIn(), (req, res, next) => {
   const helpRequestId = req.params.id;
+  console.log(helpRequestId)
   const newMessage = {
     sender: req.session.currentUser._id,
     senderTel: req.body.senderTel,

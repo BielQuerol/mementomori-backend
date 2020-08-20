@@ -5,6 +5,9 @@ const userSchema = new Schema(
   {
     email: String,
     password: String,
+    userImage: String,
+    helpMeRequests: [{ type: Schema.Types.ObjectId, ref: "HelpRequest" }],
+    helpOthersRequests: [{ type: Schema.Types.ObjectId, ref: "HelpRequest" }],
   },
   {
     timestamps: {

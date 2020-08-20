@@ -11,7 +11,9 @@ const MongoStore = require("connect-mongo")(session);
 const cors = require("cors");
 
 const auth = require("./routes/auth");
-
+const helprequestRouter = require("./routes/helprequest-routes");
+const sendhelpRouter = require("./routes/sendhelp-routes");
+const userRouter = require("./routes/user-routes");
 // MONGOOSE CONNECTION
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -65,6 +67,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // ROUTER MIDDLEWARE
 app.use("/auth", auth);
+app.use("/api", helprequestRouter);
+app.use("/api", sendhelpRouter);
+app.use("/api", userRouter);
 
 // ERROR HANDLING
 // catch 404 and forward to error handler

@@ -27,7 +27,11 @@ router.post("/sendhelpform/:id", isLoggedIn(), (req, res, next) => {
     { new: true }
   )
     .then((updatedHelpRequest) => {
-      res.json(updatedHelpRequest);
+      User.findByIdAndUpdate(req.session.currentUser._id, {$push:{ helpOthersRequests: updatedHelpRequest._id }}, {new: true})
+        .populate("helpOthersRequests")
+        .then( (updatedUser) => {
+          res.json(updatedUser);
+        } )
     })
     .catch((err) => {
       res.json(err);

@@ -10,15 +10,22 @@ const {
 const User = require("../models/user");
 
 router.put("/users", isLoggedIn(), (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  const userId = req.session.currentUser._id
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
     res, status(400).json({ message: "Specific id is not valid" });
     return;
   }
 
-  User.findByIdAndUpdate(req.params.id, req.body)
+  User.findByIdAndUpdate( 
+      userId, 
+      { email: req.body.email,
+        password: req.body.password,
+        userImage: req.body.userImage,  
+       }
+      )
     .then(() => {
       res.json({
-        message: `UserImage With ${req.params.id}is updated succesfully.`,
+        message: `User is updated succesfully.`,
       });
     })
     .catch((err) => {

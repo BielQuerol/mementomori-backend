@@ -8,6 +8,7 @@ const {
 } = require("../helpers/middlewares");
 
 const HelpRequest = require("../models/helprequest");
+const User = require("../models/user");
 
 //POST route => to create a new helprequest
 //   Se suma api a todas las rutas ya que en app.js se especifica app.use("/api") =  /api/helprequest
@@ -18,8 +19,12 @@ router.post("/helprequest", isLoggedIn(), (req, res, next) => {
     description: req.body.description,
     city: req.body.city,
   })
-    .then((response) => {
-      res.json(response);
+    .then((newRequest) => {
+       User.findByIdAndUpdate(req.session.currentUser._id, {$push:{ helpMeRequests: newRequest._id }}, {new: true})
+        .populate("helpMeRequests")
+        .then( (updatedUser) => {
+          res.json(updatedUser);
+        } )
     })
     .catch((err) => {
       res.json(err);

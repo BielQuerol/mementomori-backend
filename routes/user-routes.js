@@ -9,20 +9,34 @@ const {
 
 const User = require("../models/user");
 
-router.put("/users", isLoggedIn(), (req, res, next) => {
-  const userId = req.session.currentUser._id
+router.get("/user", isLoggedIn(), (req, res, next) => {
+  const userId = req.session.currentUser._id;
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     res, status(400).json({ message: "Specific id is not valid" });
     return;
   }
 
-  User.findByIdAndUpdate( 
-      userId, 
-      { email: req.body.email,
-        password: req.body.password,
-        userImage: req.body.userImage,  
-       }
-      )
+  User.findById(userId)
+   .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+router.put("/users", isLoggedIn(), (req, res, next) => {
+  const userId = req.session.currentUser._id;
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    res, status(400).json({ message: "Specific id is not valid" });
+    return;
+  }
+
+  User.findByIdAndUpdate(userId, {
+    email: req.body.email,
+    password: req.body.password,
+    userImage: req.body.userImage,
+  })
     .then(() => {
       res.json({
         message: `User is updated succesfully.`,

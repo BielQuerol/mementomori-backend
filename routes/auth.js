@@ -97,12 +97,18 @@ router.post(
 //revisa si el usuario está logueado usando la función helper
 //(chequea si la sesión existe), y luego destruimos la sesión
 router.post("/logout", isLoggedIn(), (req, res, next) => {
-    req.session.destroy();
-    // setea el código de estado y envía de vuelta la respuesta
-    res
+    req.session.destroy(function (err) {
+     if(err) {
+       next(err);
+       return 
+     }
+       res
       .status(204) // No content
       .send();
       return;
+     });
+    // setea el código de estado y envía de vuelta la respuesta
+    
 });
 
 //Creamos la ruta /private en `/routes/auth.js`

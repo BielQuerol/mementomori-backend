@@ -10,6 +10,7 @@ const helprequestSchema = new mongoose.Schema(
       {
         sender: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         senderTel: String,
+        senderEmail: String,
         message: String,
       },
     ],

@@ -16,6 +16,7 @@ router.post("/sendhelpform/:id", isLoggedIn(), (req, res, next) => {
   console.log(helpRequestId)
   const newMessage = {
     sender: req.session.currentUser._id,
+    senderEmail: req.body.senderEmail,
     senderTel: req.body.senderTel,
     message: req.body.message,
   };

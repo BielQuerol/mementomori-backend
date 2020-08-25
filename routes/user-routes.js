@@ -8,6 +8,7 @@ const {
 } = require("../helpers/middlewares");
 
 const User = require("../models/user");
+const { populate } = require("../models/user");
 
 router.get("/user", isLoggedIn(), (req, res, next) => {
   const userId = req.session.currentUser._id;
@@ -17,7 +18,8 @@ router.get("/user", isLoggedIn(), (req, res, next) => {
   }
 
   User.findById(userId)
-   .then((user) => {
+    .populate("helpMeRequests helpOthersRequests")
+    .then((user) => {
       res.json(user);
     })
     .catch((err) => {
@@ -45,6 +47,21 @@ router.put("/users", isLoggedIn(), (req, res, next) => {
     .catch((err) => {
       res.json(err);
     });
+});
+router.get("/users", (req, res, next) => {
+  Thing.find()
+    .then((thingsFromDB) => {
+      res.status(200).json(thingsFromDB);
+    })
+    .catch((err) => next(err));
+});
+
+router.post("/users/create", (req, res, next) => {
+  User.create(req.body)
+    .then((aNewUser) => {
+      res.status(200).json(aNewUser);
+    })
+    .catch((err) => next(err));
 });
 
 module.exports = router;

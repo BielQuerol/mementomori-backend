@@ -49,7 +49,7 @@ router.put("/users", isLoggedIn(), (req, res, next) => {
     });
 });
 router.get("/users", (req, res, next) => {
-  Thing.find()
+  User.find()
     .then((thingsFromDB) => {
       res.status(200).json(thingsFromDB);
     })

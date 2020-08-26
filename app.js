@@ -15,7 +15,7 @@ const auth = require("./routes/auth");
 const helprequestRouter = require("./routes/helprequest-routes");
 const sendhelpRouter = require("./routes/sendhelp-routes");
 const userRouter = require("./routes/user-routes");
-
+const uploadRouter = require("./routes/file-upload-router");
 // MONGOOSE CONNECTION
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -33,7 +33,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "https://mementomori-1ea5e.web.app"],
+    origin: ["http://localhost:3000", "https://memento-mori.herokuapp.com"],
   })
 );
 // app.use((req, res, next) => {
@@ -72,8 +72,17 @@ app.use("/auth", auth);
 app.use("/api", helprequestRouter);
 app.use("/api", sendhelpRouter);
 app.use("/api", userRouter);
+app.use("/api", uploadRouter);
 
-// ERROR HANDLING
+
+// ROUTE FOR SERVING REACT APP (index.html)
+app.use((req, res) => {
+  // If no routes match, send them the React HTML.
+  res.sendFile(__dirname + "/public/index.html");
+});
+
+
+//ERROR HANDLING
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   res.status(404).json({ code: "not found" });

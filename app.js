@@ -33,7 +33,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "https://memento-mori.herokuapp.com"],
+    origin: [process.env.PUBLIC_DOMAIN, "https://memento-mori.herokuapp.com"],
   })
 );
 // app.use((req, res, next) => {

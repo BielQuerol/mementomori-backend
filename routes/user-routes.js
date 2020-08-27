@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 const {
   isLoggedIn,
   isNotLoggedIn,
@@ -33,10 +35,11 @@ router.put("/users", isLoggedIn(), (req, res, next) => {
     res, status(400).json({ message: "Specific id is not valid" });
     return;
   }
-
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hashPass = bcrypt.hashSync(req.body.password, salt);
   User.findByIdAndUpdate(userId, {
     email: req.body.email,
-    password: req.body.password,
+    password: hashPass,
     userImage: req.body.userImage,
   })
     .then(() => {
